@@ -73,3 +73,25 @@ npm run dev
 ```
 
 Open the URL Vite prints (usually `http://localhost:5173`).
+
+**Manual test flow**
+
+Go to `/signup`, create an account.
+Go to `/login`, log in. You're redirected home and a JWT is stored in `localStorage`.
+On the home page, enter a question and at least 2 options, click "Create Poll". You
+land on `/poll/<id>`.
+Copy that URL into a second tab (or a private window, to act as a different voter).
+Vote on one option in the second tab. The first tab's bar and count update
+immediately, no refresh, because both tabs share the same WebSocket/Redis channel.
+Voting again from a tab that already voted is blocked on the frontend.
+Creating a poll without logging in shows a "login first" message; hitting the API
+directly without a valid JWT gets rejected with 401 by the backend middleware.
+Voting with a fake `optionId` directly against the API gets rejected with 400 — the
+backend checks the option actually exists on that poll before touching Redis.
+
+**Known limitation**
+
+Vote de-duplication is done with `localStorage` on the frontend only — it stops the same
+browser tab from voting twice by accident, but it isn't a real security control. A
+stronger version would rate-limit by IP in Redis or require login to vote. Kept simple on
+purpose since the brief only requires auth on poll creation, not on voting.
