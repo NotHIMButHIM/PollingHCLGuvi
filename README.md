@@ -161,3 +161,7 @@ part and the JWT middleware), and can explain it without looking at the code —
 internship review process includes technical interviews where you'll need to walk
 through this project in depth. Also don't forget the submission video is mandatory, not
 optional.
+
+## Manual test flow (what I actually tested)
+
+1. Go to `/signup`, create a
